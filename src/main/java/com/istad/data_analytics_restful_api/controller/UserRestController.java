@@ -2,6 +2,7 @@ package com.istad.data_analytics_restful_api.controller;
 
 import com.istad.data_analytics_restful_api.model.User;
 import com.istad.data_analytics_restful_api.model.UserAccount;
+import com.istad.data_analytics_restful_api.model.response.AccountResponse;
 import com.istad.data_analytics_restful_api.service.UserService;
 import com.istad.data_analytics_restful_api.utils.Response;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,13 +20,13 @@ public class UserRestController {
 
         this.userService = userService;
     }
-    private boolean UserExists(int id) {
-        User user = userService.findUserByID(id);
-        return user != null;
-    }
-    private Response<User> NotFound(int id){
-        return Response.<User>notFound().setMessage("Cannot find user with id "+id).setSuccess(false).setStatus(Response.Status.NOT_FOUND);
-    }
+//    private boolean UserExists(int id) {
+//        User user = userService.findUserByID(id);
+//        return user != null;
+//    }
+//    private Response<User> NotFound(int id){
+//        return Response.<User>notFound().setMessage("Cannot find user with id "+id).setSuccess(false).setStatus(Response.Status.NOT_FOUND);
+//    }
     @GetMapping("/allUsers")
     public List<User> getAllUser(){
         return userService.allUsers();
@@ -52,32 +53,33 @@ public class UserRestController {
         }
 //        return "creat user successfully!";
     }
-    @PutMapping("/update/{id}")
-    public Response<User> updateUser(@PathVariable int id, @RequestBody User user){
-        try{
-            if(UserExists(id)){
-                user.setUserId(id);
-                userService.updateUser(user,id);
-                return Response.<User>updateSuccess().setPayload(user).setMessage("Successfully for updated 👍");
-            } else {
-                return NotFound(id);
+    @PutMapping("/{id}")
+    public Response<List<AccountResponse>> updateUserAccount(@RequestBody User user,@PathVariable("id") int id){
+        try {
+            List<UserAccount> userAccounts = userService.getAllUserAccount();
+            int update = userService.updateUser(user, id);
+            if (update > 0){
+                return Response.<List<AccountResponse>>updateSuccess().setMessage("Update Successfully!");
+            }else{
+                return Response.<List<AccountResponse>>notFound().setMessage("update is not success!");
             }
-        } catch (Exception exception){
-            return Response.<User>exception().setSuccess(false).setMessage("Fail for update");
+        }catch (Exception e){
+            System.out.println("Error happened : " + e.getMessage());
+            return Response.<List<AccountResponse>>notFound().setMessage("something went wrong!");
         }
     }
     @DeleteMapping("/delete/{id}")
-    public Response<User> deleteUser(@PathVariable int id){
+    public Response<List<AccountResponse>> removeUserAccount(@PathVariable("id") int id) {
         try {
-            if(UserExists(id)){
-                userService.removeUser(id);
-                return Response.<User>deleteSuccess().setMessage("Successfully for deleted👍");
+            int deleted = userService.removeUser(id);
+            if (deleted > 0) {
+                return Response.<List<AccountResponse>>deleteSuccess().setMessage("Delete successfully!");
+            } else {
+                return Response.<List<AccountResponse>>notFound().setMessage("not found!");
             }
-            else {
-                return NotFound(id);
-            }
-        } catch (Exception exception){
-            return Response.<User>exception().setMessage("Fail for delete  ").setSuccess(false);
+        } catch (Exception e) {
+            System.out.println("Program got error: " + e.getMessage());
+            return Response.<List<AccountResponse>>exception().setMessage("Something went wrong!");
         }
     }
     @GetMapping("/userAccount")
