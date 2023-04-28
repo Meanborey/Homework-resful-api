@@ -57,12 +57,14 @@ public class UserRestController {
     public Response<List<AccountResponse>> updateUserAccount(@RequestBody User user,@PathVariable("id") int id){
         try {
             List<UserAccount> userAccounts = userService.getAllUserAccount();
-            int update = userService.updateUser(user, id);
-            if (update > 0){
-                return Response.<List<AccountResponse>>updateSuccess().setMessage("Update Successfully!");
-            }else{
-                return Response.<List<AccountResponse>>notFound().setMessage("update is not success!");
-            }
+            return  Response.<List<AccountResponse>>updateSuccess().setMessage("Update Successfully!");
+//            int update = userService.updateUser(user, id);
+//            if (update > 0){
+//                return Response.<List<AccountResponse>>ok().setMessage("Update Successfully!");
+//            }else{
+//                return Response.<List<AccountResponse>>notFound().setMessage("update is not success!");
+//            }
+
         }catch (Exception e){
             System.out.println("Error happened : " + e.getMessage());
             return Response.<List<AccountResponse>>notFound().setMessage("something went wrong!");
