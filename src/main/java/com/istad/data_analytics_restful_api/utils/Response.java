@@ -42,6 +42,12 @@ public class Response<T> {
         response.setSuccess(true);
         return response;
     }
+    public static <T> Response <T> badRequest(){
+        Response<T> response = new Response<>();
+        response.setStatus(Status.BAD_REQUEST);
+        response.setSuccess(false);
+        return response;
+    }
     public static <T> Response<T>deleteSuccess(){
         Response<T>response=new Response<>();
         response.setStatus(Status.SUCCESS_DELETE);

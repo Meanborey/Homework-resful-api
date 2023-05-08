@@ -10,11 +10,18 @@ import java.util.List;
 @Repository
 @Mapper
 public interface AccountRepository {
-    @Result(column = "account_type", property = "accountType", one = @One(select = "getAccountTypeByID"))
+    @Results({
+            @Result(property ="password" , column = "passcode"),
+            @Result(property = "accountName", column = "account_name"),
+            @Result(property = "accountNumber", column = "account_no"),
+            @Result(property = "transferLimit", column = "transfer_limit"),
+            @Result(column = "account_type", property = "accountType", one = @One(select = "getAccountTypeByID"))
+    })
     @Select("select * from account_tb")
-    List<Account> getAllAccount();
+    List<Account> getAllAccounts();
 
-    @Select("select * from accounttype_tb where id = #{account_type} ")
+    @Result(property = "accountName", column = "name")
+    @Select("select * from accounttype_tb where id=#{account_type}")
     AccountType getAccountTypeByID(int account_type);
     int createAccount(Account account);
 

@@ -20,7 +20,7 @@ public class ServiceAccountImpl implements AccountService {
 
     @Override
     public List<Account> getAllAccount() {
-        return accountRepository.getAllAccount();
+        return accountRepository.getAllAccounts();
     }
 
     @Override

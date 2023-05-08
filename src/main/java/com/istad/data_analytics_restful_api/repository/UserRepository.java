@@ -3,6 +3,8 @@ package com.istad.data_analytics_restful_api.repository;
 import com.istad.data_analytics_restful_api.model.Account;
 import com.istad.data_analytics_restful_api.model.User;
 import com.istad.data_analytics_restful_api.model.UserAccount;
+import com.istad.data_analytics_restful_api.model.request.UserRequest;
+import com.istad.data_analytics_restful_api.repository.provider.UserProvider;
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
 
@@ -12,37 +14,52 @@ import java.util.List;
 @Repository
 public interface UserRepository {
 //insert
-    @Select("select * from user_tb")
-    @Result(column = "id",property = "userId")
-    List<User> allUsers();
-    List<User> findUserByUsername(String username);
-    @Insert("insert into user_tb (username, gender, address)\n"+
-            "values(#{user.username},#{user.gender},#{user.address})")
-    int createNewUser(@Param("user") User user);
-    @Update("UPDATE user_tb SET username=#{user.username}, gender=#{user.gender}, address=#{user.address} where id =#{user.id};")
-    @Result(column = "id" , property = "userId")
-    int updateUser(@Param("user") User user, int id);
+@Result(column = "id", property = "userId")
+@SelectProvider(type = UserProvider.class, method = "getAllUsers")
+List<User> allUsers(String filterName);
 
-//select
-    @Select("select * from user_tb where id = #{id}")
-    @Result(column = "id" , property = "userId")
-    User findUserByID(int id);
-    @Delete("DELETE FROM user_tb WHERE id =#{id}")
-    @Result(column = "id" , property = "userId")
-    int removeUser(int id);
+    List<User> findUserByUsername(String username);
+    @Select("insert into users_tb (username, gender, address)\n" +
+            "values (#{user.username},#{user.gender}, #{user.address}) returning id")
+    int createNewUser(@Param("user") UserRequest user);
+
+
+    @Update("update users_tb set username=#{user.username},\n" +
+            "                    gender=#{user.gender},\n" +
+            "                    address =#{user.address}\n" +
+            "where  id = #{id};")
+    int updateUser(@Param("user") UserRequest user , int id );
+
+    @Result(property = "userId", column = "id")
+    @Select("select  * from users_tb where id = #{id}")
+    User findUserByID(int id );
+
+
+    @Delete("delete  from users_tb where id = #{id}")
+    int removeUser(int id );
     @Results({
-            @Result(
-                    property = "account",column = "id", many = @Many(select = "findAccountByUserId")
-            )
+            @Result(column = "id", property = "userId"),
+            @Result(column = "id", property = "accounts", many = @Many(select = "findAccountsByUserId"))
     })
-    @Select("select * from user_tb")
-    List<UserAccount> getAllUserAccount();
-    @Result(column = "account_type", property = "accountType", one = @One(select = "com.istad.data_analytics_restful_api.repository.AccountRepository.getAccountTypeByID"))
-    @Select("select * from user_account_tb\n" +
-            "    inner join account_tb\n" +
+    @Select("select * from users_tb")
+    List<UserAccount> getAllUserAccounts();
+
+
+
+    @Results({
+            @Result(property = "accountName",column = "account_name"),
+            @Result(property = "accountNumber", column = "account_no"),
+            @Result(property ="transferLimit", column = "transfer_limit"),
+            @Result(property = "password", column = "passcode"),
+            @Result(property = "accountType", column = "account_type",
+                    one = @One(select = "com.istad.dataanalyticrestfulapi.repository.AccountRepository.getAccountTypeByID"))
+    })
+    @Select("select * from user_account_tb " +
+            "    inner join account_tb " +
             "        a on a.id = user_account_tb.account_id\n" +
-            "where user_id=#{id};")
+            "    where user_id = #{id};")
     List<Account>findAccountByUserId(int id);
+
 
 
 }
