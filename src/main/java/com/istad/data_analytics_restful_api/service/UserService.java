@@ -10,9 +10,6 @@ import java.util.List;
 public interface UserService {
     PageInfo<User> allUsers(int page, int size, String filterName);
     List<User> findUserByUsername();
-
-
-
     int createNewUser(UserRequest user);
     int updateUser(UserRequest user, int id);
     User findUserByID(int id);

@@ -17,9 +17,9 @@ public class TransactionServiceImpl implements TransactionService {
     private final TransactionRepository autoTransactionMapper;
 
     @Override
-    public PageInfo<Transaction> getAllTransaction(int page, int size, int filter) {
-        PageHelper.startPage(page, size);
-        List<Transaction> transactionList=autoTransactionMapper.getAllTransactions(filter);
+    public PageInfo<Transaction> AllTransaction(int pageNum, int pageSize, int filter) {
+        PageHelper.startPage(pageNum, pageSize);
+        List<Transaction> transactionList=autoTransactionMapper.AllTransactions(filter);
         PageInfo<Transaction> pageInfo = new PageInfo<>(transactionList);
         return pageInfo;
     }

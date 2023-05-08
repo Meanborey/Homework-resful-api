@@ -5,12 +5,12 @@ import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.jdbc.SQL;
 
 public class TransactionProvider {
-    public static String getAllTransactions(int filters){
+    public static String AllTransactions(int filter){
         return new SQL(){{
 
             SELECT("*");
             FROM("transaction_tb");
-            if (filters!=0){
+            if (filter!=0){
                 WHERE("sender_account_id = #{filter}");
             }
         }}.toString();

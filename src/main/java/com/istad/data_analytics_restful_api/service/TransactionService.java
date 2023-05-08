@@ -4,7 +4,7 @@ import com.github.pagehelper.PageInfo;
 import org.apache.ibatis.transaction.Transaction;
 
 public interface TransactionService {
-    PageInfo<Transaction> getAllTransaction(int page, int size, int filter);
+    PageInfo<Transaction>AllTransaction(int pageNum, int pageSize, int filter);
 
     int createdNewTransaction(Transaction transaction);
     int deleteTransaction(int id);

@@ -12,8 +12,8 @@ import java.util.List;
 @Mapper
 @Repository
 public interface TransactionRepository {
-    @SelectProvider(type = TransactionProvider.class, method = "getAllTransactions")
-    public List<Transaction> getAllTransactions(int filters);
+    @SelectProvider(type = TransactionProvider.class, method = "AllTransactions")
+    public List<Transaction> AllTransactions(int filters);
     @InsertProvider(type = TransactionProvider.class, method = "insertTransaction")
     @Options(useGeneratedKeys = true, keyProperty = "id")
     int insertTransaction(Transaction transaction);
