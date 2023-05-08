@@ -5,7 +5,7 @@ import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.jdbc.SQL;
 
 public class TransactionProvider {
-    public static String AllTransactions(int filter){
+    public static String AllTransaction(int filter){
         return new SQL(){{
 
             SELECT("*");

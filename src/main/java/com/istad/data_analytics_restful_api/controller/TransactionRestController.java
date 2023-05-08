@@ -2,11 +2,8 @@ package com.istad.data_analytics_restful_api.controller;
 
 
 import com.github.pagehelper.PageInfo;
-import com.istad.data_analytics_restful_api.mapper.AutoTransactionMapper;
 import com.istad.data_analytics_restful_api.model.Transaction;
-import com.istad.data_analytics_restful_api.repository.TransactionRepository;
 import com.istad.data_analytics_restful_api.service.TransactionService;
-import com.istad.data_analytics_restful_api.service.serviceimpl.TransactionServiceImpl;
 import com.istad.data_analytics_restful_api.utils.Response;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -17,16 +14,9 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class TransactionRestController {
     private final TransactionService transactionService;
-
-//    public TransactionRestController(TransactionServiceImpl transactionService, AutoTransactionMapper autoTransactionMapper) {
-//        this.transactionService = transactionService;
-////        this.autoTransactionMapper = autoTransactionMapper;
-//    }
-
-//    private final AutoTransactionMapper autoTransactionMapper;
-    @GetMapping("/getAllTransaction")
-    Response<PageInfo<Transaction>> getAllTransaction(@RequestParam(defaultValue = "1") int pageNum,
-                                                      @RequestParam(defaultValue = "4") int pageSize,
+    @GetMapping("/AllTransaction")
+    Response<PageInfo<Transaction>> AllTransaction(@RequestParam(defaultValue = "1") int pageNum,
+                                                      @RequestParam(defaultValue = "5") int pageSize,
                                                       @RequestParam(defaultValue = "", required = false)  int filter){
         try {
             PageInfo<Transaction> allTransaction=transactionService.AllTransaction(pageNum,pageSize,filter);
@@ -38,7 +28,7 @@ public class TransactionRestController {
     }
     @PostMapping("/create-new-transaction")
     public Response<Transaction> createNewTransaction(@Valid @RequestBody Transaction transaction){
-        int created_new= transactionService.createdNewTransaction((org.apache.ibatis.transaction.Transaction) transaction);
+        int created_new= transactionService.createdNewTransaction(transaction);
         if (created_new>0){
             return Response.<Transaction>ok().setPayload(transaction).setSuccess(true).setMessage("successfully");
         }else {
@@ -65,7 +55,7 @@ public class TransactionRestController {
                                             @RequestBody Transaction transaction) {
         try {
             transaction.setId(id);
-            int updated = transactionService.updateTransaction((org.apache.ibatis.transaction.Transaction) transaction);
+            int updated = transactionService.updateTransaction(transaction);
             if (updated > 0) {
                 return Response.<Void>ok().setSuccess(true).setMessage("Successfully for Update!");
             } else {
