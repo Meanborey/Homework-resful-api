@@ -11,8 +11,8 @@ import java.util.List;
 public interface TransactionRepository {
     @SelectProvider(type = TransactionProvider.class, method = "AllTransaction")
      List<Transaction> AllTransaction(int filter);
-//    @InsertProvider(type = TransactionProvider.class, method = "insertTransaction")
-    @SelectProvider(type = TransactionProvider.class,method = "insertTransaction")
+    @InsertProvider(type = TransactionProvider.class, method = "insertTransaction")
+//    @SelectProvider(type = TransactionProvider.class,method = "insertTransaction")
     @Options(useGeneratedKeys = true, keyProperty = "id")
     int insertTransaction(Transaction transaction);
 

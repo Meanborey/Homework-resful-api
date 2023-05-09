@@ -17,7 +17,7 @@ public class TransactionRestController {
     @GetMapping("/AllTransaction")
     Response<PageInfo<Transaction>> AllTransaction(@RequestParam(defaultValue = "1") int pageNum,
                                                       @RequestParam(defaultValue = "5") int pageSize,
-                                                      @RequestParam(defaultValue = "", required = false)  int filter){
+                                                      @RequestParam(defaultValue = "0")  int filter){
         try {
             PageInfo<Transaction> allTransaction=transactionService.AllTransaction(pageNum,pageSize,filter);
             return Response.<PageInfo<Transaction>>ok().setPayload(allTransaction).setMessage("Success!");

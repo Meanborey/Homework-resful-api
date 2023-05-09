@@ -7,7 +7,6 @@ import org.apache.ibatis.jdbc.SQL;
 public class TransactionProvider {
     public static String AllTransaction(int filter){
         return new SQL(){{
-
             SELECT("*");
             FROM("transaction_tb");
             if (filter!=0){
